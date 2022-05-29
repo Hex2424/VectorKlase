@@ -21,7 +21,7 @@ int main()
                 v2.push_back(i);
 
             auto delay2 = timer2.stop() / 1000;
-            printf("STD: %Lf mano: %Lf\n", delay, delay2);
+            printf("index:%d:STD: %Lf mano: %Lf\n", iz, delay, delay2);
         // Baigti v2 užpildymo laiko matavimą
     }
 

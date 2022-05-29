@@ -1,2 +1,4 @@
 # VectorKlase
-VectorKlasesTyrimai
+VectorKlasesTyrimai:
+Palyginimai skirtingu dydziu pushbackais
+!["Comparison"](Palyginimai.png)
