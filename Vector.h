@@ -7,31 +7,92 @@ template <typename T>
 class Vector
 {
     private:
-        T* allocation;
+        T* allocation = nullptr;
+        T* allocationEnd = nullptr;
+
         size_t allocationUsed = 0;     // used size 
         size_t allocationCapacity = 0; // most of the time bigger than used
+        bool deleteAlloc = true;
     public:
-        typedef T* iterator;
+        typedef T* iteratorr;
         Vector()
         {
-            allocation = new T[0];
+            allocation = new T[1];
+            allocationCapacity = 1;
         }
         Vector(size_t size)
         {
+            // if(allocation != nullptr)
+            // {
+            //     delete[] allocation;
+            // }
+
             allocation = new T[size];
             allocationCapacity = size;
+            allocationEnd = allocation + size;
         }
+        void setDeleteAlloc(bool condition)
+        {
+            deleteAlloc = condition;
+        }
+        
+        Vector& operator=(Vector &that)
+        {
+            if(this != &that)
+            {
+                this->allocation = that.allocation;
+                this->allocationCapacity = that.allocationCapacity;
+                this->allocationUsed = that.allocationUsed;
+                this->allocationEnd = that.allocationEnd;
+                this->deleteAlloc = that.deleteAlloc;
+                that.setDeleteAlloc(false);
+            }
+            return *this;
+        }
+
+        Vector(const Vector& vector)
+        {
+            this->allocation = new T[vector.allocationCapacity];
+            for(size_t i = 0; i < vector.allocationUsed; i++)
+            {
+                this->allocation[i] = vector.allocation[i];
+            }
+            this->allocationCapacity = vector.allocationCapacity;
+            this->allocationUsed = vector.allocationUsed;
+            this->allocationEnd = vector.allocationEnd;
+        }
+
+        void reserve(size_t alloc)
+        {
+            resize(allocationCapacity + alloc);
+        }
+
+        void resize(size_t newSize)
+        {
+            realloc(newSize);
+        }
+
+
+
         ~Vector()
         {
-            delete[] allocation;
+            if(deleteAlloc)
+            {
+                delete[] allocation;
+            }
         }
-        iterator getBegin()
+        iteratorr begin()
         {
             return allocation;
         }
-        iterator getEnd()
+
+        size_t size()
         {
-            return allocation + allocationUsed;
+            return allocationEnd - allocation;
+        }
+        iteratorr end()
+        {
+            return allocationEnd;
         }
         size_t getCapacity()
         {
@@ -44,22 +105,34 @@ class Vector
             {
                 allocation[allocationUsed] = data;
                 allocationUsed++;
+                allocationEnd++;
             }else
             {
                 size_t newCapacity = allocationCapacity * (3.0 / 2) + 1;
-                T* tempPointer = new T[newCapacity];
-                for(size_t i = 0; i < allocationCapacity; i++)
-                {
-                    tempPointer[i] = allocation[i];
-                }
-                delete[] allocation;
-                allocation = tempPointer;
-                allocationCapacity = newCapacity;
+                realloc(newCapacity);
                 push_back(data);
             }
         }
 
+        void realloc(size_t size)
+        {
+
+            T* tempPointer = new T[size];
+            for(size_t i = 0; i < allocationCapacity; i++)
+            {
+                tempPointer[i] = allocation[i];
+            }
+            delete[] allocation;
+            allocation = tempPointer;
+            allocationCapacity = size;
+        }
+
         T& at(size_t index)
+        {
+            return allocation[index];
+        }
+
+        const T& at(size_t index) const
         {
             return allocation[index];
         }
@@ -69,11 +142,11 @@ class Vector
             return at(index);
         }
 
-        void erase(iterator it)
+        void erase(iteratorr it)
         {
-            for(iterator i = it; i < getEnd(); i++)
+            for(iteratorr i = it; i < end(); i++)
             {
-                if((i + 1) != getEnd())
+                if((i + 1) != end())
                 {
                     *i = *(i + 1);
                 }

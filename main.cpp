@@ -22,6 +22,7 @@ int main()
 
             auto delay2 = timer2.stop() / 1000;
             printf("index:%d:STD: %Lf mano: %Lf\n", iz, delay, delay2);
+            // printf("Memory Reallocations:%d\n", v2.memoryReallocations);
         // Baigti v2 užpildymo laiko matavimą
     }
 
