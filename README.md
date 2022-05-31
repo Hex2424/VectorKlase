@@ -22,6 +22,12 @@ vec.getEnd();
 ## istrinti elementa:
 vec.erase(iterator)
 
+## resize 
+vec.resize(newSize);
+
+## reserve
+vec.reserve(addMemorySize);
+
 VectorKlasesTyrimai:
 Palyginimai skirtingu dydziu pushbackais
 !["Comparison"](Palyginimai.png)
